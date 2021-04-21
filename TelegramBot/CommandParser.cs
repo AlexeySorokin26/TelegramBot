@@ -6,17 +6,24 @@
     class CommandParser
     {
         private List<IChatCommand> Command;
-        //private AddingController addingController;
+        private AddingController addingController;
 
         public CommandParser()
         {
             Command = new List<IChatCommand>();
-            //addingController = new AddingController();
+            addingController = new AddingController();
         }
 
         public void AddCommand(IChatCommand chatCommand)
         {
             Command.Add(chatCommand);
+        }
+
+        public bool IsAddingCommand(string message)
+        {
+            var command = Command.Find(x => x.CheckMessage(message));
+
+            return command is AddWordCommand;
         }
 
         public bool IsTextCommand(string message)
@@ -62,7 +69,34 @@
         {
             var command = Command.Find(x => x.CheckMessage(message)) as IChatTextCommand;
 
+            if (command is IChatTextCommandWithAction)
+            {
+                if (!(command as IChatTextCommandWithAction).DoAction(chat))
+                {
+                    return "Ошибка выполнения команды!";
+                };
+            }
+
             return command.ReturnText();
+        }
+
+        public void StartAddingWord(string message, Conversation chat)
+        {
+            var command = Command.Find(x => x.CheckMessage(message)) as AddWordCommand;
+
+            addingController.AddFirstState(chat);
+            command.StartProcessAsync(chat);
+
+        }
+
+        public void NextStage(string message, Conversation chat)
+        {
+            var command = Command.Find(x => x is AddWordCommand) as AddWordCommand;
+
+            command.DoForStageAsync(addingController.GetState(chat), chat, message);
+
+            addingController.NextStage(message, chat);
+
         }
     }
 }

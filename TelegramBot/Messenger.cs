@@ -24,6 +24,8 @@
             parser.AddCommand(new SayHiCommand());
             parser.AddCommand(new PoemButtonCommand(botClient));
             parser.AddCommand(new AskMeCommand());
+            parser.AddCommand(new AddWordCommand(botClient));
+            parser.AddCommand(new DeleteWordCommand());
         }
         public string CreateTextMessage(Conversation chat)
         {
@@ -31,12 +33,12 @@
             System.Console.WriteLine("+");
             switch (chat.GetLastMessage())
             {
-                case "/saymehi":
-                    text = "привет";
-                    break;
-                case "/askme":
-                    text = "как дела";
-                    break;
+                //case "/saymehi":
+                //    text = "привет";
+                //    break;
+                //case "/askme":
+                //    text = "как дела";
+                //    break;
                 default:
                     var delimiter = ",";
                     text = "История ваших сообщений: " + string.Join(delimiter, chat.GetTextMessages().ToArray());
@@ -49,6 +51,13 @@
         public async Task MakeAnswer(Conversation chat)
         {
             var lastmessage = chat.GetLastMessage();
+
+            if (chat.IsAddingInProcess)
+            {
+                parser.NextStage(lastmessage, chat);
+
+                return;
+            }
 
             if (parser.IsMessageCommand(lastmessage))
             {
@@ -68,7 +77,6 @@
             if (parser.IsTextCommand(command))
             {
                 var text = parser.GetMessageText(command, chat);
-                //System.Console.WriteLine("+");
                 await SendText(chat, text);
             }
 
@@ -79,7 +87,12 @@
                 parser.AddCallback(command, chat);
 
                 await SendTextWithKeyBoard(chat, text, keys);
+            }
 
+            if (parser.IsAddingCommand(command))
+            {
+                chat.IsAddingInProcess = true;
+                parser.StartAddingWord(command, chat);
             }
         }
 

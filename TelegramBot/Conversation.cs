@@ -1,12 +1,18 @@
 ﻿namespace TelegramBot
 {
     using Telegram.Bot.Types;
+    using TelegramBot.EnglishTrainer;
     using System.Collections.Generic;
+
     public class Conversation
     {
         private Chat telegramChat;
 
         private List<Message> telegramMessages;
+
+        public Dictionary<string, Word> dictionary;
+
+        public bool IsAddingInProcess;  
 
         public Conversation(Chat chat)
         {
