@@ -1,14 +1,25 @@
 ﻿namespace TelegramBot
 {
     using System;
-    using Telegram.Bot;
     class Program
     {
         static void Main(string[] args)
         {
-            var botClient = new TelegramBotClient(BotCredentials.BotToken);
-            var me = botClient.GetMeAsync().Result;
-            Console.WriteLine("Hello my name is {0}.", me.FirstName);
+            var bot = new BotWorker();
+            bot.Inizalize();
+            bot.Start();
+
+            Console.WriteLine("type stop to quit");
+
+            string command;
+            do
+            {
+                command = Console.ReadLine();
+
+            } while (command != "stop");
+
+            bot.Stop();
         }
+        
     }
 }
