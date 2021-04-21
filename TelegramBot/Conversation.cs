@@ -18,6 +18,7 @@
         {
             telegramChat = chat;
             telegramMessages = new List<Message>();
+            dictionary = new Dictionary<string, Word>();
         }
 
         public void AddMessage(Message message)
