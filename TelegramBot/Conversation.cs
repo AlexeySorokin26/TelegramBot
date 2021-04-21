@@ -35,6 +35,7 @@
         }
 
         public long GetId() => telegramChat.Id;
-
+        
+        public string GetLastMessage() => telegramMessages[telegramMessages.Count - 1].Text;
     }
 }
