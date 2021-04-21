@@ -1,15 +1,15 @@
 ﻿namespace TelegramBot
 {
-    using System;
     using Telegram.Bot;
     using Telegram.Bot.Args;
-    class BotWorker
+    public class BotWorker
     {
-        static ITelegramBotClient botClient;
-
+        private ITelegramBotClient botClient;
+        private BotMessageLogic logic;
         public void Inizalize()
         {
             botClient = new TelegramBotClient(BotCredentials.BotToken);
+            logic = new BotMessageLogic(botClient);
         }
 
         public void Start()
@@ -23,14 +23,10 @@
             botClient.StopReceiving();
         }
 
-        static async void Bot_OnMessage(object sender, MessageEventArgs e)
+        private async void Bot_OnMessage(object sender, MessageEventArgs e)
         {
-            if (e.Message.Text != null)
-            {
-                Console.WriteLine($"got a new msg in chat: {e.Message.Chat.Id}.");
-
-                await botClient.SendTextMessageAsync(
-                chatId: e.Message.Chat, text: "you type:\n" + e.Message.Text);
+            if (e.Message != null) {
+                await logic.Response(e);
             }
         }
     }
