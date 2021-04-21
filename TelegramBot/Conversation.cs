@@ -2,21 +2,15 @@
 {
     using Telegram.Bot.Types;
     using System.Collections.Generic;
-    class Conversation
+    public class Conversation
     {
-        /// <summary>
-        /// to deal with chat
-        /// </summary>
         private Chat telegramChat;
-        
-        /// <summary>
-        /// to store messages
-        /// </summary>
+
         private List<Message> telegramMessages;
 
         public Conversation(Chat chat)
         {
-            telegramChat = new Chat();
+            telegramChat = chat;
             telegramMessages = new List<Message>();
         }
 
@@ -41,5 +35,6 @@
         }
 
         public long GetId() => telegramChat.Id;
+
     }
 }

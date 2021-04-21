@@ -6,6 +6,7 @@
     {
         private ITelegramBotClient botClient;
         private BotMessageLogic logic;
+
         public void Inizalize()
         {
             botClient = new TelegramBotClient(BotCredentials.BotToken);
@@ -25,7 +26,8 @@
 
         private async void Bot_OnMessage(object sender, MessageEventArgs e)
         {
-            if (e.Message != null) {
+            if (e.Message != null)
+            {
                 await logic.Response(e);
             }
         }

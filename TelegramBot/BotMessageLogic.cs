@@ -7,19 +7,18 @@
 
     public class BotMessageLogic
     {
+        private Messenger messanger;
+
+        private Dictionary<long,
+        Conversation> chatList;
+
         private ITelegramBotClient botClient;
-
-        private Messenger messenger;
-
-        /// <summary>
-        /// to store all chats
-        /// </summary>
-        private Dictionary<long, Conversation> chatList;
 
         public BotMessageLogic(ITelegramBotClient botClient)
         {
-            messenger = new Messenger();
-            chatList = new Dictionary<long, Conversation>();
+            messanger = new Messenger();
+            chatList = new Dictionary<long,
+            Conversation>();
             this.botClient = botClient;
         }
 
@@ -39,14 +38,15 @@
             chat.AddMessage(e.Message);
 
             await SendTextMessage(chat);
+
         }
 
         private async Task SendTextMessage(Conversation chat)
         {
-            var text = messenger.CreateTextMessage(chat);
+            var text = messanger.CreateTextMessage(chat);
 
             await botClient.SendTextMessageAsync(
-                chatId: chat.GetId(), text: text);
+            chatId: chat.GetId(), text: text);
         }
     }
 }
