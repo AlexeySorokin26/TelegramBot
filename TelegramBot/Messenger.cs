@@ -28,6 +28,7 @@
             parser.AddCommand(new DictionaryCommand(botClient));
             parser.AddCommand(new TrainingCommand(botClient));
             parser.AddCommand(new StopTrainingCommand());
+            parser.AddCommand(new HelpCommand());
         }
         public string CreateTextMessage(Conversation chat)
         {
