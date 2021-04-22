@@ -8,6 +8,8 @@
             {
                 return
                     "  Welcome to the TrainingBot2!" +
+                    " Create your own library and train!" +
+                    " ps very easy to ruin it... be careful... please..." + 
                     //"---------------------------------------------------------------------------/n" +
                     " Type /man to see how to use it." +
                     //"---------------------------------------------------------------------------/n" +
