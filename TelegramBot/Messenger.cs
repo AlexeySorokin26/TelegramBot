@@ -1,6 +1,5 @@
 ﻿namespace TelegramBot
 {
-
     using System.Threading.Tasks;
     using Telegram.Bot;
     using Telegram.Bot.Types.ReplyMarkups;
@@ -26,6 +25,9 @@
             parser.AddCommand(new AskMeCommand());
             parser.AddCommand(new AddWordCommand(botClient));
             parser.AddCommand(new DeleteWordCommand());
+            parser.AddCommand(new DictionaryCommand(botClient));
+            parser.AddCommand(new TrainingCommand(botClient));
+            parser.AddCommand(new StopTrainingCommand());
         }
         public string CreateTextMessage(Conversation chat)
         {
@@ -52,6 +54,13 @@
         {
             var lastmessage = chat.GetLastMessage();
 
+            if (chat.IsTraningInProcess && !parser.IsTextCommand(lastmessage))
+            {
+                parser.ContinueTraining(lastmessage, chat);
+
+                return;
+            }
+
             if (chat.IsAddingInProcess)
             {
                 parser.NextStage(lastmessage, chat);
@@ -73,7 +82,6 @@
 
         public async Task ExecCommand(Conversation chat, string command)
         {
-
             if (parser.IsTextCommand(command))
             {
                 var text = parser.GetMessageText(command, chat);
@@ -93,6 +101,11 @@
             {
                 chat.IsAddingInProcess = true;
                 parser.StartAddingWord(command, chat);
+            }
+
+            if (parser.IsDictionaryCommand(command))
+            {
+                parser.ShowDictionary(command, chat);
             }
         }
 

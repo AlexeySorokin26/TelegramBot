@@ -10,9 +10,9 @@
         public bool DoAction(Conversation chat)
         {
             var message = chat.GetLastMessage();
-
+           
             var text = ClearMessageFromCommand(message);
-
+            
             if (chat.dictionary.ContainsKey(text))
             {
                 chat.dictionary.Remove(text);

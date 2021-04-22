@@ -26,6 +26,13 @@
             return command is AddWordCommand;
         }
 
+        public bool IsDictionaryCommand(string message)
+        {
+            var command = Command.Find(x => x.CheckMessage(message));
+
+            return command is DictionaryCommand;
+        }
+
         public bool IsTextCommand(string message)
         {
             var command = Command.Find(x => x.CheckMessage(message));
@@ -68,7 +75,7 @@
         public string GetMessageText(string message, Conversation chat)
         {
             var command = Command.Find(x => x.CheckMessage(message)) as IChatTextCommand;
-
+            
             if (command is IChatTextCommandWithAction)
             {
                 if (!(command as IChatTextCommandWithAction).DoAction(chat))
@@ -96,6 +103,22 @@
             command.DoForStageAsync(addingController.GetState(chat), chat, message);
 
             addingController.NextStage(message, chat);
+
+        }
+
+        public void ShowDictionary(string message, Conversation chat)
+        {
+            var command = Command.Find(x => x is DictionaryCommand) as DictionaryCommand;
+
+            command.ShowDictionary(chat);
+        
+        }
+
+        public void ContinueTraining(string message, Conversation chat)
+        {
+            var command = Command.Find(x => x is TrainingCommand) as TrainingCommand;
+
+            command.NextStepAsync(chat, message);
 
         }
     }
